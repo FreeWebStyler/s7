@@ -224,7 +224,9 @@ class DataColumn extends Column
     protected function renderDataCellContent($model, $key, $index)
     {
         if ($this->content === null) {
-            return $this->grid->formatter->format($this->getDataCellValue($model, $key, $index), $this->format);
+            //pre($this->getDataCellValue($model, $key, $index));
+            //return $this->grid->formatter->format($this->getDataCellValue($model, $key, $index), $this->format);
+            return $this->getDataCellValue($model, $key, $index);
         } else {
             return parent::renderDataCellContent($model, $key, $index);
         }
