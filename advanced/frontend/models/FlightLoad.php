@@ -75,6 +75,8 @@ class FlightLoad extends \yii\db\ActiveRecord
     public function getBilledMeals()
     {
         return $this->hasMany(BilledMeals::className(), ['flight_load_id' => 'id']);
+       //return $this->hasMany(BilledMeals::className(), ['flight_date' => 'flight_date']);
+       //return $this->hasMany(BilledMeals::className(), ['flight_date' => 'flight_date']);
     }
 
     public function getFlight()
@@ -95,8 +97,11 @@ class FlightLoad extends \yii\db\ActiveRecord
     public function getType()
     {
         //print_r($this->flight);die;
-        //print_r($this);die;
-        //print_r($this->billedMeals);die;
+
+        //pred($this);
+        //pred($this->billedMeals);
+        //if(isset($this->billedMeals)) return $this->billedMeals;
         if(isset($this->billedMeals[0])) return $this->billedMeals[0]->type;
+        //if(isset($this->billedMeals[0])) return $this->billedMeals[0]->type;
     }
 }

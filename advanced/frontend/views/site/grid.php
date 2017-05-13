@@ -35,6 +35,8 @@ $this->title = 'S7';
 ?>
     <?php
 
+    //pred($dataProvider);
+    //pred($dataProvider->query->where);
     echo GridView::widget([
         'dataProvider'  => $dataProvider,
         'filterModel'   => $searchModel,
@@ -48,7 +50,41 @@ $this->title = 'S7';
 //            'parent.name', // Второй вариант: проще, но без возможности сортировки по полю
             'flight_id',
             //'from',
-           'type',
+           //'type',
+            [
+                 'attribute'=>'type',
+                 //'value' => 'billed_meals.type',
+                 'value' => function ($model) use($gridSearch, $dataProvider) {
+                    //pred($dataProvider);
+                    //pred($model);
+                    //pred($model->billedMeals);
+                    $cells = '';
+                    //$cells = '444';
+
+                    #$ar = &$model->billedMeals;
+                    //$ar = $model->billedMeals;
+                    //pred($model->billedMeals);
+                    $c = count($model->billedMeals);
+                    $first = 1;
+                    for($i=0; $i < $c; $i++){
+                        if(isset($gridSearch['type']) && $model->billedMeals[$i]->type != $gridSearch['type']) continue;
+                        //pred(33);
+
+                        if($first){ $cells.= $model->billedMeals[$i]->type.'</td></tr>'; $first = 0;}
+                        if($i > 0 && $i < $c-1) $cells.='<tr><td>'.$model->id.'</td><td>'.$model->flight_id.'</td><td>'.$model->billedMeals[$i]->type.'</td></tr>';
+                        if($i == $c-1) $cells.= '<tr><td style=background:red>'.$model->id.'</td><td>'.$model->flight_id.'</td><td>'.$model->billedMeals[$i]->type;
+                    }
+                    //pred(gettype($model->billedMeals));
+                    //pred($cells);
+                    return $cells;
+                },
+            ],
+
+
+
+
+
+
            /* [
                             'attribute'=>'From',
                             //'value' => 'flight.from',

@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
@@ -238,13 +239,25 @@ SELECT `fl`.`flight_id`, `fl`.`flight_date`, `econom` AS `econom_load`, (select 
         //$query = FlightLoad::find()->select('flight.*, flight_load.id')->leftJoin('flight', 'flight_load.flight_id = flight.id')->where(['flight.id' => 1])->all();//->innerJoinWith('flight_meals')->all();
         //$query = FlightLoad::find()->leftJoin('flight', 'flight_load.flight_id = flight.id')->where(['flight.id' => 1])->all();//->innerJoinWith('flight_meals')->all();
         //$query = FlightLoad::find()->select('flight.from')->innerJoin('flight')->where(['flight.id' => 1])->all();
-/*
-        $query = FlightLoad::find()->with('flight')->where(['flight_id' => 1])->all();
 
+        //$query = FlightLoad::find()->with('flight')->where(['flight_id' => 1])->all(); pred($query[0]->flight[0]->from);
+
+        //$query = FlightLoad::find()->joinWith('flight')->where(['flight.id' => 1])->all();        pred($query[0]->flight[0]->from);
+
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['flight_load.flight_id' => 1])->all();        pred($query[0]->billedMeals);
         //select(['flight.*', 'flight_load.*'])->
-        echo '<pre>';
-        print_r($query);
-        die;*/
+
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['billed_meals.id' => 1])->all(); pred($query[0]->billedMeals[0]->type);
+
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['billed_meals.type' => 'Блюдо'])->all();
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['like','billed_meals.type','Блюдо'])->all();
+
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['like','billed_meals.type','Блюдо'])->limit(10)->all();
+        //$query = FlightLoad::find()->joinWith('billedMeals')->where(['like','billed_meals.type','Блюдо'])->limit(100)->all();
+
+        //$query->where(['billed_meals.type' => 'Блюдо']);
+        //$query->where(['like','billed_meals.type','Блюдо']);
+        //pred($query[0]->billedMeals);
 
 
         //print_r(Yii::$app->request->queryParams); die;
@@ -254,6 +267,7 @@ SELECT `fl`.`flight_id`, `fl`.`flight_date`, `econom` AS `econom_load`, (select 
         return $this->render('grid', [
             'searchModel'   => $searchModel,
             'dataProvider'  => $dataProvider,
+            'gridSearch'    => isset(Yii::$app->request->queryParams['GridSearch']) ? Yii::$app->request->queryParams['GridSearch'] : ''
         ]);
     }
 
