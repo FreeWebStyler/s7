@@ -17,18 +17,23 @@ class GridSearch extends FlightLoad
     /*public $from;
     public $to;*/
     public $id;
+    public $flight_id;
     public $type;
+    public $date;
+    public $econom_load;
+    public $econom_meal;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'flight_id'], 'integer'],
+            [['id', 'flight_id', 'econom_load', 'econom_meal'], 'integer'],
            // [['name', 'bortnumber'], 'safe'],
             //[['from', 'to'], 'string', 'max' => 3],
             //[['type'], 'string'],
-            [['type'], 'safe'],
+            [['type', 'date'], 'safe'],
         ];
     }
 
@@ -77,7 +82,7 @@ class GridSearch extends FlightLoad
         #$limit = isset($params['per-page']) ? $params['per-page'] : 10;
         //pred($offset);        pred($limit);
         $query->select(['flight_load.id','flight_load.flight_id']);
-        $query->from('flight_load');
+        $query->from('flight_load as fl');
         //$query->offset('5');
         // $query->offset('11');
         $query->offset($offset);
@@ -87,11 +92,19 @@ class GridSearch extends FlightLoad
 
         //$c = $query->count('flight_load.id');
 
-        $query->select(['flight_load.id','flight_load.flight_id','billed_meals.type']);
+        $query->select([
+            //'flight_load.id',
+            'fl.flight_id',
+            'fl.econom as econom_load',
+            'fl.flight_date',
+            'billed_meals.type',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Эконом' and flight_id = fl.flight_id and flight_date=fl.flight_date) as econom_meal",
+
+            ]);
         //pred($c);
 
         //$query->from('flight_load, billed_meals');
-        $query->join('INNER JOIN', 'billed_meals', 'flight_load.id = billed_meals.flight_load_id');
+        $query->join('INNER JOIN', 'billed_meals', 'fl.id = billed_meals.flight_load_id');
         //$query->joinWith(['billedMeals']);
         //$query->with(['billedMeals']);
 
@@ -120,17 +133,30 @@ class GridSearch extends FlightLoad
         //pred(gettype($this->id));
         // grid filtering conditions
 
-        $query->andFilterWhere([
+        //pred($this->date);
+        //pred($params);
 
+        $query->andFilterWhere([
         //$query->andWhere([
-            'flight_load.id'            => $this->id,
+            //'fl.id'    => $this->id,
+            'fl.flight_id'    => $this->flight_id,
            // 'billed_meals.flight_id'    => $this->flight_id,
             //'from'      => $this->from
-            'billed_meals.type'         => $this->type
+
+            'billed_meals.type' => $this->type,
+
+           // 'billed_meals.date' => $this->date
             //'billed_meals.type'         => 'Блюдо'
         ]);
 
-        $c = $query->count('flight_load.id');
+        if($this->date){
+            $start_date = $this->date.' 00:00:00';
+            $end_date = $this->date.' 23:59:59';
+            $query->andFilterWhere(['between', 'fl.flight_date', $start_date, $end_date]);
+        }
+
+
+        $c = $query->count('fl.id');
 
         //echo '<pre>';        print_r($query);die;
 
@@ -146,12 +172,19 @@ class GridSearch extends FlightLoad
         //pred($dataProvider);
 
         //pred($params);
-        $params['sort'] == 'id' ? $sort = SORT_ASC : $sort = SORT_DESC;
+        $sort = SORT_ASC;
+        if(isset($params['sort'])){
+            //$params['sort'] == '-id' ? $sort = SORT_DESC : $sort = SORT_ASC;
+            $params['sort'] == '-flight_id' ? $sort = SORT_DESC : $sort = SORT_ASC;
+        }
 
         $query->orderBy([
-            'flight_load.id' => $sort,
+            //'fl.id'    => $sort,
+            'fl.flight_id'    => $sort,
+            'billed_meals.type' => $sort,
             //'name' => SORT_DESC,
         ]);
+        //$query->groupBy(['billed_meals.type']);
 
         //pred($query->all());
 
@@ -164,7 +197,8 @@ class GridSearch extends FlightLoad
             'allModels' => $query->all(),
             'totalCount' => $c,
             'sort' => [
-                'attributes' => ['flight_load.id'],
+                //'attributes' => ['fl.id']
+                'attributes' => ['fl.flight_id']
             ],
             //'pagination' => false,
 
@@ -203,7 +237,7 @@ class GridSearch extends FlightLoad
                 'desc' => ['flight_load.id' => SORT_DESC],
                 'label' => 'ID'
             ],*/
-                        'id' => [
+            'id' => [
                 'asc' => ['id' => SORT_ASC],
                 'desc' => ['id' => SORT_DESC],
                 'label' => 'ID'
@@ -219,6 +253,12 @@ class GridSearch extends FlightLoad
                     'label' => 'Из'
                 ],*/
                 'type' => [
+                    'asc' => ['type' => SORT_ASC],
+                    'desc' => ['type' => SORT_DESC],
+                    'label' => 'Тип',
+                    //'id'    => 'pup',
+                ],
+                'flight_date' => [
                     'asc' => ['type' => SORT_ASC],
                     'desc' => ['type' => SORT_DESC],
                     'label' => 'Тип',

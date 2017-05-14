@@ -47,11 +47,22 @@ $this->title = 'S7';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
 //            'parent.name', // Второй вариант: проще, но без возможности сортировки по полю
             'flight_id',
             //'from',
+            'econom_load',
+            'econom_meal',
           'type',
+          //'flight_date',
+
+          [
+              'attribute' => 'flight_date',
+              //'value' => 'list_date',
+              'filter' => \yii\jui\DatePicker::widget(['name'=>'GridSearch[date]', 'options' => ['class' => 'form-control'], 'language' => 'ru', 'dateFormat' => 'yyyy-MM-dd']), //'dd-MM-yyyy'
+              'format' => 'html',
+          ],
+
            /* [
                  'attribute'=>'type',
                  //'value' => 'billed_meals.type',
