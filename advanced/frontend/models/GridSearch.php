@@ -51,9 +51,9 @@ class GridSearch extends FlightLoad
     public function search($params)
     {
         $this->load($params);
-        $query = FlightLoad::find();
+        //$query = FlightLoad::find();
+        $query = new Query;
         //pred($query);
-        //$query = new Query;
         /*$dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -64,18 +64,16 @@ class GridSearch extends FlightLoad
                 'pageSize' => 10
             ]
         ]);*/
-
         /*$dataProvider = new ArrayDataProvider([
             'allModels' => FlightLoad::find()->all(),
-        ]);       */
+        ]);*/
 
         //pred($params);
         $perpage = isset($params['per-page']) ? $params['per-page'] : 10;
         $page = isset($params['page']) ? $params['page'] : 1;
         $offset = $page == 1 ? 0 : ($page - 1) * $perpage;
 
-        pre($offset, $perpage, $page);
-        debug($offset.' '.$perpage.' '.$page);
+        //pre($offset, $perpage, $page);        debug($offset.' '.$perpage.' '.$page);
         #$limit = isset($params['per-page']) ? $params['per-page'] : 10;
         //pred($offset);        pred($limit);
         $query->select(['flight_load.id','flight_load.flight_id']);
@@ -93,8 +91,8 @@ class GridSearch extends FlightLoad
         //pred($c);
 
         //$query->from('flight_load, billed_meals');
-        //$query->join('INNER JOIN', 'billed_meals', 'flight_load.id = billed_meals.flight_load_id');
-        $query->joinWith(['billedMeals']);
+        $query->join('INNER JOIN', 'billed_meals', 'flight_load.id = billed_meals.flight_load_id');
+        //$query->joinWith(['billedMeals']);
         //$query->with(['billedMeals']);
 
 

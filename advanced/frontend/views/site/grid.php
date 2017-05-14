@@ -51,7 +51,7 @@ $this->title = 'S7';
 //            'parent.name', // Второй вариант: проще, но без возможности сортировки по полю
             'flight_id',
             //'from',
-          //'type',
+          'type',
            /* [
                  'attribute'=>'type',
                  //'value' => 'billed_meals.type',
@@ -82,17 +82,15 @@ $this->title = 'S7';
                 //'filter' => Html::activeInput('text', $searchModel, 'type', ['name' => 'type', 'class' => 'form-control']),
             ],*/
 
-             [
+             /*[
                   'attribute'=>'type',
                   //'value' => 'billed_meals.type',
                   'value' => function ($model) use($gridSearch, $cc, $gc, $pageSize, $dataProvider) {
                      //pred($dataProvider);
-                     //pred($model);
+                    pred($model);
                      //pred($model->billedMeals);
                     $gc++; echo $gc.'<br>';
                     $cells = '';
-                     //pred($model);
-                     //pred($model->billedMeals);
                      $c = count($model->billedMeals);
                      $first = 1;
                      for($i=0; $i < $c; $i++){
@@ -115,7 +113,7 @@ $this->title = 'S7';
                  },
 
                  //'filter' => Html::activeInput('text', $searchModel, 'type', ['name' => 'type', 'class' => 'form-control']),
-             ],
+             ],*/
 
 
 
