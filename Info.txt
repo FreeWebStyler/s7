@@ -1,1 +1,3 @@
 https://www.s7.ru/home/offers/hackathon/index.dot
+
+http://s7.loc/index.php?r=site%2Fgrid&1=10&GridSearch%5Bid%5D=199&GridSearch%5Bflight_id%5D=&GridSearch%5Btype%5D=&sort=id&per-page=10

@@ -85,7 +85,7 @@ class GridSearch extends FlightLoad
         $query->limit($perpage);
         //$query->all();
 
-        $c = $query->count('flight_load.id');
+        //$c = $query->count('flight_load.id');
 
         $query->select(['flight_load.id','flight_load.flight_id','billed_meals.type']);
         //pred($c);
@@ -94,7 +94,6 @@ class GridSearch extends FlightLoad
         $query->join('INNER JOIN', 'billed_meals', 'flight_load.id = billed_meals.flight_load_id');
         //$query->joinWith(['billedMeals']);
         //$query->with(['billedMeals']);
-
 
         //$query->andFilterWhere(['like', 'billed_meals.type', "Блюдо"]);
         //$query->andFilterWhere(['like', 'billed_meals.type', 'Блюдо']);
@@ -131,6 +130,8 @@ class GridSearch extends FlightLoad
             //'billed_meals.type'         => 'Блюдо'
         ]);
 
+        $c = $query->count('flight_load.id');
+
         //echo '<pre>';        print_r($query);die;
 
         /*$query->andFilterWhere([
@@ -144,19 +145,20 @@ class GridSearch extends FlightLoad
             ->andFilterWhere(['like', 'bortnumber', $this->bortnumber]);*/
         //pred($dataProvider);
 
-
+        //pred($params);
+        $params['sort'] == 'id' ? $sort = SORT_ASC : $sort = SORT_DESC;
 
         $query->orderBy([
-            'flight_load.id' => SORT_ASC,
+            'flight_load.id' => $sort,
             //'name' => SORT_DESC,
         ]);
 
+        //pred($query->all());
 
         //pred($query->createCommand()->getRawSql());
         //pred($query->all());
 
         //pred($page);
-
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
