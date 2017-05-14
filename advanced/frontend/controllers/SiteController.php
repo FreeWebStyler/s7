@@ -188,7 +188,7 @@ class SiteController extends Controller
 
         //$query = $modelFlightLoad->getBilledMeals();
 /*
-select fl.flight_id, fl.flight_date, econom as econom_load, (select sum(qty) from billed_meals where type='Комплект' and class='Эконом' and flight_id = fl.flight_id and flight_date=fl.flight_date) as econom_meal, fl.business as business_load, (select sum(qty) from billed_meals where type='Комплект' and class='Бизнес' and flight_id = fl.flight_id and flight_date=fl.flight_date) as business_meal, fl.crew as crew_load, (select sum(qty) from billed_meals where type='Комплект' and class='Экипаж ВС' and flight_id = fl.flight_id and flight_date=fl.flight_date) as crew_meal   from flight_load fl, billed_meals m where m.flight_load_id=fl.id group by fl.id;
+select fl.flight_id, fl.flight_date, econom as econom_load, (select sum(qty) from billed_meals where type='Комплект' and class='Эконом' and flight_id = fl.flight_id and flight_date=fl.flight_date) as econom_meal, fl.business as business_load, (select sum(qty) from billed_meals where type='Комплект' and class='Бизнес' and flight_id = fl.flight_id and flight_date=fl.flight_date) as business_meal, fl.crew as crew_load, (select sum(qty) from billed_meals where type='Комплект' and class='Экипаж ВС' and flight_id = fl.flight_id and flight_date=fl.flight_date) as crew_meal   from flight_load fl, billed_meals m where m.flight_load_id=fl.id GROUP BY `fl`.`id` ORDER BY `fl`.`flight_id` ASC LIMIT 10
 */
 /*
 select

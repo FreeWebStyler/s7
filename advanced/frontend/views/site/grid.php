@@ -53,7 +53,11 @@ $this->title = 'S7';
             //'from',
             'econom_load',
             'econom_meal',
-          'type',
+            'business_load',
+            'business_meal',
+            'crew_load',
+            'crew_meal',
+          //'type',
           //'flight_date',
 
           [

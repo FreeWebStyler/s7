@@ -22,6 +22,10 @@ class GridSearch extends FlightLoad
     public $date;
     public $econom_load;
     public $econom_meal;
+    public $business_load;
+    public $business_meal;
+    public $crew_load;
+    public $crew_meal;
 
     /**
      * @inheritdoc
@@ -29,7 +33,7 @@ class GridSearch extends FlightLoad
     public function rules()
     {
         return [
-            [['id', 'flight_id', 'econom_load', 'econom_meal'], 'integer'],
+            [['id', 'flight_id', 'econom_load', 'econom_meal', 'business_load', 'business_meal'], 'integer'],
            // [['name', 'bortnumber'], 'safe'],
             //[['from', 'to'], 'string', 'max' => 3],
             //[['type'], 'string'],
@@ -81,30 +85,42 @@ class GridSearch extends FlightLoad
         //pre($offset, $perpage, $page);        debug($offset.' '.$perpage.' '.$page);
         #$limit = isset($params['per-page']) ? $params['per-page'] : 10;
         //pred($offset);        pred($limit);
-        $query->select(['flight_load.id','flight_load.flight_id']);
+        //$query->select(['flight_load.id','flight_load.flight_id']);
         $query->from('flight_load as fl');
         //$query->offset('5');
         // $query->offset('11');
+
         $query->offset($offset);
+
         //$query->limit('10');
+
         $query->limit($perpage);
+
         //$query->all();
 
         //$c = $query->count('flight_load.id');
 
         $query->select([
             //'flight_load.id',
+            //'COUNT(*)',
             'fl.flight_id',
             'fl.econom as econom_load',
             'fl.flight_date',
-            'billed_meals.type',
+            //'m.type',
             "(select sum(qty) from billed_meals where type='Комплект' and class='Эконом' and flight_id = fl.flight_id and flight_date=fl.flight_date) as econom_meal",
-
+            'fl.business as business_load',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Бизнес' and flight_id = fl.flight_id and flight_date=fl.flight_date) as business_meal",
+            'fl.crew as crew_load',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Экипаж ВС' and flight_id = fl.flight_id and flight_date=fl.flight_date) as crew_meal"
             ]);
         //pred($c);
 
         //$query->from('flight_load, billed_meals');
-        $query->join('INNER JOIN', 'billed_meals', 'fl.id = billed_meals.flight_load_id');
+
+
+        $query->join('INNER JOIN', 'billed_meals as m', 'fl.id = m.flight_load_id');
+
+
         //$query->joinWith(['billedMeals']);
         //$query->with(['billedMeals']);
 
@@ -131,7 +147,7 @@ class GridSearch extends FlightLoad
 
         //pred($this->id);
         //pred(gettype($this->id));
-        // grid filtering conditions
+        //grid filtering conditions
 
         //pred($this->date);
         //pred($params);
@@ -139,11 +155,13 @@ class GridSearch extends FlightLoad
         $query->andFilterWhere([
         //$query->andWhere([
             //'fl.id'    => $this->id,
+
             'fl.flight_id'    => $this->flight_id,
+
            // 'billed_meals.flight_id'    => $this->flight_id,
             //'from'      => $this->from
 
-            'billed_meals.type' => $this->type,
+            //'billed_meals.type' => $this->type,
 
            // 'billed_meals.date' => $this->date
             //'billed_meals.type'         => 'Блюдо'
@@ -155,8 +173,43 @@ class GridSearch extends FlightLoad
             $query->andFilterWhere(['between', 'fl.flight_date', $start_date, $end_date]);
         }
 
+        $query->groupBy(['fl.id']);
 
-        $c = $query->count('fl.id');
+        //$c = $query->count('fl.id');
+        //$c = $query->count();
+
+        /*$query = new Query;
+        $c = $query->select([
+            //'flight_load.id',
+            //'COUNT(*)',
+            'fl.flight_id',
+            'fl.econom as econom_load',
+            'fl.flight_date',
+            //'m.type',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Эконом' and flight_id = fl.flight_id and flight_date=fl.flight_date) as econom_meal",
+            'fl.business as business_load',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Бизнес' and flight_id = fl.flight_id and flight_date=fl.flight_date) as business_meal",
+            'fl.crew as crew_load',
+            "(select sum(qty) from billed_meals where type='Комплект' and class='Экипаж ВС' and flight_id = fl.flight_id and flight_date=fl.flight_date) as crew_meal",
+
+            ])->from('flight_load fl, billed_meals m')
+        //->offset($offset)->limit($perpage)
+        //->join('INNER JOIN', 'billed_meals', 'fl.id = billed_meals.flight_load_id')
+        ->andFilterWhere(['fl.flight_id'    => $this->flight_id ])
+        ->andWhere('m.flight_load_id = fl.id')
+        ->groupBy(['fl.id'])
+        //->all();
+        ->count();
+        */
+
+        $countQuery = clone $query;
+
+        $countQuery->offset('');
+        $countQuery->limit('');
+
+        $c = $countQuery->count();
+
+        //pred($c);
 
         //echo '<pre>';        print_r($query);die;
 
@@ -181,12 +234,11 @@ class GridSearch extends FlightLoad
         $query->orderBy([
             //'fl.id'    => $sort,
             'fl.flight_id'    => $sort,
-            'billed_meals.type' => $sort,
+            'fl.flight_date'  => 'SORT_ASC',
+            //'billed_meals.type' => $sort,
+
             //'name' => SORT_DESC,
         ]);
-        //$query->groupBy(['billed_meals.type']);
-
-        //pred($query->all());
 
         //pred($query->createCommand()->getRawSql());
         //pred($query->all());
@@ -196,10 +248,10 @@ class GridSearch extends FlightLoad
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
             'totalCount' => $c,
-            'sort' => [
+            /*'sort' => [
                 //'attributes' => ['fl.id']
                 'attributes' => ['fl.flight_id']
-            ],
+            ],*/
             //'pagination' => false,
 
             'pagination' => [
