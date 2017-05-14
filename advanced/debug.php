@@ -414,7 +414,7 @@
                 }
                 else
                 {
-                    file_put_contents ($plain, $header.$result, FILE_APPEND);
+                    //file_put_contents ($plain, $header.$result, FILE_APPEND);
                 }
             }
             else

@@ -100,8 +100,8 @@ class FlightLoad extends \yii\db\ActiveRecord
 
         //pred($this);
         //pred($this->billedMeals);
-        //if(isset($this->billedMeals)) return $this->billedMeals;
-        if(isset($this->billedMeals[0])) return $this->billedMeals[0]->type;
+        if(isset($this->billedMeals)) return $this->billedMeals;
+        //if(isset($this->billedMeals[0])) return $this->billedMeals[0]->type;
         //if(isset($this->billedMeals[0])) return $this->billedMeals[0]->type;
     }
 }

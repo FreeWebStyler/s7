@@ -34,7 +34,8 @@ $this->title = 'S7';
 ]);*/
 ?>
     <?php
-
+    $cc = 0;
+    $gc = 0;
     //pred($dataProvider);
     //pred($dataProvider->query->where);
     echo GridView::widget([
@@ -44,14 +45,14 @@ $this->title = 'S7';
         'showFooter'    => false,
         'emptyCell'     => '-',
         'columns' => [
-           // ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn'],
 
             'id',
 //            'parent.name', // Второй вариант: проще, но без возможности сортировки по полю
             'flight_id',
             //'from',
-           //'type',
-            [
+          //'type',
+           /* [
                  'attribute'=>'type',
                  //'value' => 'billed_meals.type',
                  'value' => function ($model) use($gridSearch, $dataProvider) {
@@ -59,16 +60,15 @@ $this->title = 'S7';
                     //pred($model);
                     //pred($model->billedMeals);
                     $cells = '';
-                    //$cells = '444';
-
-                    #$ar = &$model->billedMeals;
-                    //$ar = $model->billedMeals;
+                    //pred($model);
                     //pred($model->billedMeals);
                     $c = count($model->billedMeals);
                     $first = 1;
                     for($i=0; $i < $c; $i++){
+                       // pred($model->billedMeals[$i]->type);
                         if(isset($gridSearch['type']) && $model->billedMeals[$i]->type != $gridSearch['type']) continue;
-                        //pred(33);
+                        //pred($gridSearch);
+                        //pred($gridSearch['type']);
 
                         if($first){ $cells.= $model->billedMeals[$i]->type.'</td></tr>'; $first = 0;}
                         if($i > 0 && $i < $c-1) $cells.='<tr><td>'.$model->id.'</td><td>'.$model->flight_id.'</td><td>'.$model->billedMeals[$i]->type.'</td></tr>';
@@ -78,7 +78,44 @@ $this->title = 'S7';
                     //pred($cells);
                     return $cells;
                 },
-            ],
+
+                //'filter' => Html::activeInput('text', $searchModel, 'type', ['name' => 'type', 'class' => 'form-control']),
+            ],*/
+
+             [
+                  'attribute'=>'type',
+                  //'value' => 'billed_meals.type',
+                  'value' => function ($model) use($gridSearch, $cc, $gc, $pageSize, $dataProvider) {
+                     //pred($dataProvider);
+                     //pred($model);
+                     //pred($model->billedMeals);
+                    $gc++; echo $gc.'<br>';
+                    $cells = '';
+                     //pred($model);
+                     //pred($model->billedMeals);
+                     $c = count($model->billedMeals);
+                     $first = 1;
+                     for($i=0; $i < $c; $i++){
+                           // pred($model->billedMeals[$i]->type);
+                         if(isset($gridSearch['type']) && $model->billedMeals[$i]->type != $gridSearch['type']) continue;
+                         //echo $cc;
+                         $cc++;
+                         if($cc > $pageSize) {//$cc = 0;
+                            break;}
+                         //pred($gridSearch);
+                         //pred($gridSearch['type']);
+                         //$cells.=555;
+                         if($first){ $cells.= $model->billedMeals[$i]->type.'</td></tr>'; $first = 0;}
+                         if($i > 0 && $i < $c-1) $cells.='<tr><td>-</td><td>'.$model->id.'</td><td>'.$model->flight_id.'</td><td>'.$model->billedMeals[$i]->type.'</td></tr>';
+                         if($i == $c-1) $cells.= '<tr><td>-</td><td><tr><td style=background:red>'.$model->id.'</td><td>'.$model->flight_id.'</td><td>'.$model->billedMeals[$i]->type;
+                     }
+                     //pred(gettype($model->billedMeals));
+                     //pred($cells);
+                     return $cells;
+                 },
+
+                 //'filter' => Html::activeInput('text', $searchModel, 'type', ['name' => 'type', 'class' => 'form-control']),
+             ],
 
 
 

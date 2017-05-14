@@ -267,7 +267,8 @@ SELECT `fl`.`flight_id`, `fl`.`flight_date`, `econom` AS `econom_load`, (select 
         return $this->render('grid', [
             'searchModel'   => $searchModel,
             'dataProvider'  => $dataProvider,
-            'gridSearch'    => isset(Yii::$app->request->queryParams['GridSearch']) ? Yii::$app->request->queryParams['GridSearch'] : ''
+            'gridSearch'    => isset(Yii::$app->request->queryParams['GridSearch']) ? Yii::$app->request->queryParams['GridSearch'] : '',
+            'pageSize' => 10
         ]);
     }
 

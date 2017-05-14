@@ -155,7 +155,8 @@ class Pagination extends Object implements Linkable
             return $this->totalCount > 0 ? 1 : 0;
         } else {
             $totalCount = $this->totalCount < 0 ? 0 : (int) $this->totalCount;
-
+            //pred($totalCount);
+            //pred((int) (($totalCount + $pageSize - 1) / $pageSize));
             return (int) (($totalCount + $pageSize - 1) / $pageSize);
         }
     }
@@ -173,7 +174,7 @@ class Pagination extends Object implements Linkable
             $page = (int) $this->getQueryParam($this->pageParam, 1) - 1;
             $this->setPage($page, true);
         }
-
+        //pred($this->_page);
         return $this->_page;
     }
 
@@ -293,7 +294,7 @@ class Pagination extends Object implements Linkable
     public function getOffset()
     {
         $pageSize = $this->getPageSize();
-
+        //pred($pageSize < 1 ? 0 : $this->getPage() * $pageSize);
         return $pageSize < 1 ? 0 : $this->getPage() * $pageSize;
     }
 
@@ -305,7 +306,7 @@ class Pagination extends Object implements Linkable
     public function getLimit()
     {
         $pageSize = $this->getPageSize();
-
+        //pred($pageSize < 1 ? -1 : $pageSize);
         return $pageSize < 1 ? -1 : $pageSize;
     }
 
@@ -347,6 +348,8 @@ class Pagination extends Object implements Linkable
             $request = Yii::$app->getRequest();
             $params = $request instanceof Request ? $request->getQueryParams() : [];
         }
+
+        //pred(isset($params[$name]) && is_scalar($params[$name]) ? $params[$name] : $defaultValue);
 
         return isset($params[$name]) && is_scalar($params[$name]) ? $params[$name] : $defaultValue;
     }

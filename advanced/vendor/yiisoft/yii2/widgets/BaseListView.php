@@ -179,7 +179,10 @@ abstract class BaseListView extends Widget
      */
     public function renderSummary()
     {
+
+        //pred($this->dataProvider);
         $count = $this->dataProvider->getCount();
+        //pred($count);
         if ($count <= 0) {
             return '';
         }
